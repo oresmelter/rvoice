@@ -1,0 +1,11 @@
+All code inside except recources (those in folder src/rc) 
+is under terms of GNU Public License, check it in 
+that web address:
+http://www.gnu.org/licenses/gpl.html
+
+As i do not know what is a legal status of generated
+sound recources, i do not recommend to use that for
+commercial use, because copyright holder of sound generation
+software could treat that as violation of his rights to
+intellectual property, which would result in various claims.
+
