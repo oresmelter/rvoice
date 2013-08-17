@@ -1,0 +1,10 @@
+#!/bin/bash
+
+TARGET=test_dtmf
+SRC_DIR=.
+
+INCLUDES="../../src/include"
+LIBPATHS="../../src/libs/libdtmf"
+LIBRARIES="asound dtmf"
+
+. /tmp/do_makes.sh

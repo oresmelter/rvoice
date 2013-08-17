@@ -1,0 +1,5 @@
+#!/bin/bash
+
+SUBDIRS="test_dtmf"
+
+. /tmp/do_makes.sh
