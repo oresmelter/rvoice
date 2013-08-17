@@ -1,0 +1,8 @@
+#!/bin/bash
+
+TARGET=libdtmf.a
+SRC_DIR=.
+
+CFLAGS=-D DTMF-ALSA
+
+. /tmp/do_makes.sh

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+SUBDIRS="dtmfclient dtmfserver"
+
+. /tmp/do_makes.sh

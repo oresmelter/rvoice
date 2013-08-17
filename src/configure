@@ -1,0 +1,5 @@
+#!/bin/bash
+
+SUBDIRS="libs complex"
+
+. /tmp/do_makes.sh

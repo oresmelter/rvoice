@@ -1,0 +1,15 @@
+#!/bin/bash
+
+SUBDIRS="src examples"
+
+if [ -f /tmp/do_makes.sh ]
+   then
+   . /tmp/do_makes.sh
+   else
+   if [ -f ./do_makes.sh ]
+      then
+      cp -f ./do_makes.sh /tmp
+      else
+      echo "WARNING: cannot find building script do_makes.sh"
+   fi
+fi

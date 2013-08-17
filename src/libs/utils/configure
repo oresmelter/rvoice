@@ -1,0 +1,5 @@
+#!/bin/bash
+
+TARGET=libutils.a
+
+. /tmp/do_makes.sh

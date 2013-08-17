@@ -1,0 +1,5 @@
+#!/bin/bash
+
+SUBDIRS="libdtmf utils"
+
+. /tmp/do_makes.sh

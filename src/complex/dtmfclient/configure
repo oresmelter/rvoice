@@ -1,0 +1,15 @@
+#!/bin/bash
+
+TARGET=dtmfclient
+
+SRC_DIR=./
+SUBDIRS=""
+
+CFLAGS=
+LDFLAGS=
+
+INCLUDES="../../libs/utils"
+LIBPATHS="../../libs/utils"
+LIBRARIES="utils asound"
+
+. /tmp/do_makes.sh
