@@ -290,14 +290,14 @@ void closeall(int fd)
 }
 
 /* ------------------------------------------------------------------------ */
-       /* daemon() - detach process from user and disappear into the
-          background       * returns -1 on failure, but you can't do much except
-          exit in that case       * since we may already have forked. This is
-          based on the BSD version,       * so the caller is responsible for
-          things like the umask, etc.       */
 
-       /* believed to work on all Posix systems */
+/* daemon() - detach process from user and disappear into the background
+ * returns -1 on failure, but you can't do much except exit in that case
+ * since we may already have forked. This is based on the BSD version,
+ * so the caller is responsible for things like the umask, etc.
+ */
 
+/* believed to work on all Posix systems */
 int dodaemon(int nochdir, int noclose)
 {
     switch (fork()) {
@@ -306,15 +306,16 @@ int dodaemon(int nochdir, int noclose)
     case -1:
 	return -1;
     default:
-	_exit(0);		/* exit the original process
+	exit(0);		/* exit the original process
 				 */
     }
 
     if (setsid() < 0)		/* shoudn't fail */
 	return -1;
 
-    /* dyke out this switch if you want to acquire a control tty
-       in *//* the future -- not normally advisable for daemons */
+/* dyke out this switch if you want to acquire a control tty
+ * in the future -- not normally advisable for daemons 
+ */
 
     switch (fork()) {
     case 0:
@@ -322,7 +323,7 @@ int dodaemon(int nochdir, int noclose)
     case -1:
 	return -1;
     default:
-	_exit(0);
+	exit(0);
     }
 
     if (!nochdir)
