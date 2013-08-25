@@ -13,18 +13,19 @@ struct work_unit
        {
        unsigned char type;
        void* param;
-       }
+       };
 
 struct work_algo
        {
        struct sound_params params;
        int units_quantity;
        struct work_unit** units;
-       }
+       };
 
 typedef struct work_algo algorithm;
 
-extern algorythm algo;
+extern algorithm algo;
 extern char demon;
+extern sound_params current_params;
 
 #endif
