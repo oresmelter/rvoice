@@ -1,8 +1,8 @@
 #ifndef MISC_H
 #define MISC_H
 
-int analyze_opts(int, char**);
 int check_integer(char*);
-
+int calculate_size();
+void go_out();
 
 #endif

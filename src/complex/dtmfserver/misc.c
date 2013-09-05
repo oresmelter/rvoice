@@ -1,22 +1,12 @@
-#include <stdio.h>
-#include <unistd.h>
+#include <stdlib.h>
+#include <syslog.h>
+#include <errno.h>
+#include <limits.h>
+
 
 #include "misc.h"
 #include "main.h"
-
-/**
- * Формат:
- * d - запуск в режиме демона
- * m - режим моно
- * t - выводить DTMF
- * v - выводить время голосом
- * p <интервал> - пауза
- * s <файл> - вывод файла
- * f <частота> - частота дискретизации
- * b <разрядность> - разрядность в битах
- * h <> параметры вывода заголовка WAV
- */
-const char* format="dmtvp:s:f:b:h:";
+#include "opts.h"
 
 /**
  * проверка строки содержащей число
@@ -28,116 +18,64 @@ int check_integer(char* st)
 {
 char* endp=NULL;
 long l;
+errno=0;
 if(st==NULL)
   {
   return(-1);
   };
-l=strtol(st, endp, 10);
-if((l==LON
-G_MIN)||(l==LONG_MAX))
+l=strtol(st, &endp, 10);
+if((l==LONG_MIN)||(l==LONG_MAX))
   {
   return(0);
   };
-if(*endp!=NULL)
+if(errno!=0)
   {
   return(0);
   };
-return(1);
-}
-
-/**
- * добавляет запись в алгоритм работы
- */
-int add_to_algo(struct work_unit w)
-{
+if((*st!=0x00)&&(*endp==0x00))
+  {
+  return(1);
+  }
+else
+  {
+  syslog(LOG_ERR, "результат конверсии %p\n", endp);
+  };
 return(0);
 }
 
 /**
- * выделяет память под фрагмент алгоритма
- * и заполняет ее
+ * парсер целых чисел
  */
-struct work_unit** allocate_unit(char p, char* v)
+int try_parse(char param, char* arg)
 {
-int n;
-if(check_integer(optarg))
+if(!check_integer(arg))
   {
-  n=atoi(optarg);
-  }
-else
-  {
-  syslog(LOG_ERR, "Ошибка в параметре <%c %s>\n", p, v);
-  exit(-1);
+  syslog(LOG_ERR, "Ошибка при разборе параметра <-%c %s>\n", param, arg);
+  go_out();
   };
-
-
-return();
+return(atoi(arg));
 }
 
 /**
- * Анализ параметров командной строки
- *
+ * размер пустого буффера равный
+ * секунде воспроизведения
  */
-int analize_opts(int argc, char** argv)
+int calculate_size()
 {
-struct work_utit* wu;
-opterr=0;
-demon=0;
-algo.params.mono=0;
-while(res=getopt(argc, argv, format)!=-1)
-     {
-     switch(res)
-           {
-           case 'd': demon=0x01;
-                     break;
-           case 'm': algo.params.mono=1;
-                     break;
-           case 't': allocate_unit('t',optarg);
-                     break;
-           case 'v': allocate_unit('v',optarg);
-                     break;
-           case 'p': allocate_unit('p',optarg);
-                     break;
-           case 's': allocate_unit('s',optarg);
-                     break;
-           case 'f': 
-                     if(check_integer(optarg))
-                       {
-                       algo.params.freq=atoi(optarg);
-                       }
-                     else
-                       {
-                       syslog(LOG_ERR, "Ошибка в параметре <-f %s>\n", optarg);
-                       exit(-1);
-                       };
-                     break;
-           case 'b': 
-                     if(check_integer(optarg))
-                       {
-                       algo.params.freq=atoi(optarg);
-                       }
-                     else
-                       {
-                       syslog(LOG_ERR, "Ошибка в параметре <-f %s>\n", optarg);
-                       exit(-1);
-                       };
-                     break;
-           case 'h': 
-                     if(check_integer(optarg))
-                       {
-                       algo.params.freq=atoi(optarg);
-                       }
-                     else
-                       {
-                       syslog(LOG_ERR, "Ошибка в параметре <-f %s>\n", optarg);
-                       exit(-1);
-                       };
-                     break;
-           case '?': return(-1);
-                     break;
-           };
-
-     };
-
+int res;
+res=current_params.freq*current_params.bits;
+if(current_params.mono!=1)
+  {
+  res=res*2;
+  };
+return(res);
 }
 
+/**
+ * завершение работы
+ */
+void go_out()
+{
+closelog();
+exit(-1);
+}
