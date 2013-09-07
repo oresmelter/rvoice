@@ -9,7 +9,7 @@ extern const char* V_PATH;
 struct voice_list
        {
        const char* file;
-       struct voice* next;
+       struct voice_list* next;
        };
 
 typedef struct voice_list voices;

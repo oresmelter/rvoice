@@ -52,7 +52,7 @@ int n;
 struct work_unit* w;
 int* pn;
 
-syslog(LOG_INFO, "Создаем запись с параметрами %c, %p\n", p, pn);
+syslog(LOG_INFO, "Создаем запись с параметрами %c, %p\n", p, v);
 
 pn=(int*)malloc(sizeof(int));
 if(pn==NULL)
@@ -73,7 +73,7 @@ n=try_parse(p, v);
 w->type=p;
 w->param=(void*)pn;
 w->next_unit=NULL;
-syslog(LOG_INFO, "Создаем запись с параметрами %c, %p\n", p, pn);
+syslog(LOG_INFO, "Создана запись с параметрами %c, %p\n", p, pn);
 add_to_algo(w);
 }
 

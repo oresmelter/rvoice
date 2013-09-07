@@ -60,11 +60,11 @@ return(atoi(arg));
  * размер пустого буффера равный
  * секунде воспроизведения
  */
-int calculate_size()
+int calculate_bps()
 {
 int res;
-res=current_params.freq*current_params.bits;
-if(current_params.mono!=1)
+res=algo.params.freq*algo.params.bits;
+if(algo.params.mono!=1)
   {
   res=res*2;
   };

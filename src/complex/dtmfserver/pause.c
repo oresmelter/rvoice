@@ -16,7 +16,8 @@
 // 1024 * 1024 * 1024
 #define MAX_SIZE 1073741824
 
-char* ZEROES;
+unsigned char* ZEROES;
+int zeroes_fd=-1;
 
 /**
  * инициализация пустого буффера для использования 
@@ -24,20 +25,29 @@ char* ZEROES;
  */
 void init_buffer()
 {
-int fd;
 char* tmp=NULL;
-fd=open("/dev/zero", O_RDONLY);
-if(fd==-1)
+
+zeroes_fd=open("/dev/zero", O_RDONLY);
+if(zeroes_fd==-1)
   {
   syslog(LOG_ERR, "cannot open /dev/zero\n");
   exit(-1);
   };
-tmp=mmap(tmp, MAX_SIZE, PROT_READ, MAP_PRIVATE, fd, 0);
+tmp=mmap(NULL, MAX_SIZE, PROT_READ, MAP_SHARED, zeroes_fd, 0);
 if(tmp==NULL)
   {
   syslog(LOG_ERR, "cannot map /dev/zero\n");
   exit(-1);
   };
+
+/*
+tmp=(char*)calloc(1, MAX_SIZE);
+if(tmp==NULL)
+  {
+  syslog(LOG_ERR, "Not enough memory for filling pause buffer\n");
+  exit(-1);
+  };
+*/
 ZEROES=tmp;
 }
 
@@ -53,16 +63,21 @@ int res;
 snd_pcm_sframes_t frames;
 
 syslog(LOG_INFO, "пауза %d\n", *time);
-res=calculate_size();
+res=calculate_bps()/2;
 syslog(LOG_INFO, "размер буфера %d\n", res);
-return(0);
 for(i=0; i<*time; i++)
    {
-   while((frames = snd_pcm_writei(playback_handle, ZEROES, res)) < 0) 
-        {
-        snd_pcm_prepare(playback_handle);
-        syslog(LOG_WARNING, "<<<<<<<<<<<<<<< Buffer Underrun >>>>>>>>>>>>>>>\n");
-        };
+   syslog(LOG_INFO, "second #%d\n",i);
+   frames = snd_pcm_writei(playback_handle, ZEROES, res);
+   if(frames < 0)
+     {
+     frames = snd_pcm_recover(playback_handle, frames, 0);
+     if(frames < 0)
+       {
+       syslog(LOG_ERR, "snd_pcm_writei failed\n");
+       break;
+       };
+     };
    };
 return(0);
 }

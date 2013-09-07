@@ -1,4 +1,5 @@
 #include "engine.h"
+#include "finish.h"
 
 /**
  * я главная функция и нечего меня по мелочам дергать
@@ -13,5 +14,6 @@ do
   MainCycle();
   } while(1);
 
+Finalize();
 return(0);
 }

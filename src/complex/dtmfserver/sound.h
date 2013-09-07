@@ -10,5 +10,6 @@ extern snd_pcm_stream_t stream;
 
 void open_device();
 void setup_device();
+void simple_setup();
 
 #endif

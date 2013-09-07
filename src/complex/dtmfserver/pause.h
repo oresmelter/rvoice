@@ -6,5 +6,7 @@
  */
 void init_buffer();
 
-extern char* ZEROES;
+extern unsigned char* ZEROES;
+int zeroes_fd;
+
 #endif

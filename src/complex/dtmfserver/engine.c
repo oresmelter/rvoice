@@ -51,8 +51,8 @@ init_buffer();
 
 // для звука
 open_device();
-setup_device();
-
+//setup_device();
+simple_setup();
 }
 
 

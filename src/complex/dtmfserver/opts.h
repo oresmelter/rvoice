@@ -29,7 +29,6 @@ typedef struct work_algo algorithm;
 
 extern algorithm algo;
 extern char demon;
-extern spars current_params;
 
 
 int analyze_opts(int, char**);
