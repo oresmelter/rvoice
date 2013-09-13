@@ -63,7 +63,7 @@ int res;
 snd_pcm_sframes_t frames;
 
 syslog(LOG_INFO, "пауза %d\n", *time);
-res=calculate_bps()/2;
+res=calculate_bps()/2/8;
 syslog(LOG_INFO, "размер буфера %d\n", res);
 for(i=0; i<*time; i++)
    {

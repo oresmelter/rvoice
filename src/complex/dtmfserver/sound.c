@@ -92,8 +92,8 @@ int frame=algo.params.bits*channels;
 int bps=frame*rate;
 
 syslog(LOG_INFO, "preparing to play:\n");
-// latency 0.5sec
-if((err = snd_pcm_set_params(playback_handle, format, SND_PCM_ACCESS_RW_INTERLEAVED, 1, rate, 1, 500000)) < 0)
+// latency 1 sec
+if((err = snd_pcm_set_params(playback_handle, format, SND_PCM_ACCESS_RW_INTERLEAVED, 1, rate, 1, 1000000)) < 0)
   {
   syslog(LOG_ERR, "Playback open error: %s\n", snd_strerror(err));
   go_out();

@@ -1,6 +1,8 @@
 #include <syslog.h>
+#include <stdlib.h>
 
 #include "voice.h"
+#include "misc.h"
 
 
 const char* V_PATH="../share/rvoice/rc/";
@@ -36,23 +38,70 @@ const char* V_FOURTY = "40.wav";
 const char* V_FIFTY = "50.wav";
 
 
-voices voice;
+voices voice={NULL, NULL};
 
-int allocate_voice(char* v)
+/**
+ * создает и добавляет в список следующее
+ * имя файла для воспроизведения.
+ */
+int allocate_voice(char* f)
 {
-if(1)
+voices* tmp;
+voices* v;
+
+if(v==NULL)
   {
-  
+  return(-1);
   };
+
+v=(voices*)malloc(sizeof(voices));
+if(v==NULL)
+  {
+  syslog(LOG_ERR, "Cannot allocate memory for voice\n");
+  go_out();
+  };
+
+tmp=&voice;
+
+while(tmp->next!=NULL)
+     {
+     tmp=tmp->next;
+     };
+
+tmp->next=v;
+v->file=f;
+v->next=NULL;
 }
 
 
+/**
+ * потрошит строку времени
+ */
 int parse_time(char* time)
 {
 
 
 
 }
+
+
+/**
+ * очищает список файлов голоса
+ */
+void free_voices()
+{
+voices* it;
+voices* nxt;
+
+it=&voice;
+while(it->next!=NULL)
+     {
+     nxt=it;
+     free(it);
+     it=nxt;
+     };
+}
+
 
 
 /**
