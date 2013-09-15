@@ -1,5 +1,8 @@
 #!/bin/bash
 
 TARGET=libutils.a
+SRC_DIR=.
+
+INCLUDES="../../include"
 
 . /tmp/do_makes.sh

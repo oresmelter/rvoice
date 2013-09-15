@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SUBDIRS="src examples"
+SUBDIRS="src"
 
 if [ -f /tmp/do_makes.sh ]
    then
