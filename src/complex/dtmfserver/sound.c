@@ -8,8 +8,9 @@ snd_pcm_t* playback_handle;
 snd_pcm_hw_params_t* hw_params;
 snd_pcm_stream_t stream = SND_PCM_STREAM_PLAYBACK;
 //char* device_name="dmix";
-char* device_name="default";
+//char* device_name="default";
 //char* device_name="tee:dmix,'/proc/self/fd/1',raw";
+char* device_name="tee:default,'/proc/self/fd/1',raw";
 
 /**
  * map between bits and proper sound format to play

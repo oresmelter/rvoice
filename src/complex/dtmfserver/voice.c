@@ -12,47 +12,41 @@ const char* V_PATH="../share/rvoice/rc/";
 const char* V_SEKUND = "sekund.wav";
 const char* V_MINUT = "minut.wav";
 const char* V_CHASOV =  "chasov.wav";
-
 const char* V_SEKUNDA = "sekunda.wav";
 const char* V_MINUTA = "minuta.wav";
 const char* V_CHAS =  "chas.wav";
-
 const char* V_SEKUNDY = "sekundy.wav";
 const char* V_MINUTY = "minuty.wav";
 const char* V_CHASA =  "chasa.wav";
 
+const char* V_ZERO = "nolj.wav";
 const char* V_ODIN = "odin.wav";
 const char* V_ODNA = "odna.wav";
-
 const char* V_DVA = "dva.wav";
 const char* V_DVE = "dve.wav";
+const char* V_THREE = "tri.wav";
+const char* V_FOUR = "chetyre.wav";
+const char* V_FIVE = "pyat.wav";
+const char* V_SIX = "shestj.wav";
+const char* V_SEVEN = "semj.wav";
+const char* V_EIGHT = "vosemj.wav";
+const char* V_NINE = "devyatj.wav";
 
-const char* V_ZERO = "0.wav";
-const char* V_ONE = "1.wav";
-const char* V_TWO = "2.wav";
-const char* V_THREE = "3.wav";
-const char* V_FOUR = "4.wav";
-const char* V_FIVE = "5.wav";
-const char* V_SIX = "6.wav";
-const char* V_SEVEN = "7.wav";
-const char* V_EIGHT = "8.wav";
-const char* V_NINE = "9.wav";
+const char* V_TEN = "desyatj.wav";
+const char* V_ELEVEN = "odinnadcatj.wav";
+const char* V_TWELVE = "dvenadcatj.wav";
+const char* V_THIRTEEN = "trinadcatj.wav";
+const char* V_FOURTEEN = "chetyrnadcatj.wav";
+const char* V_FIFTEEN = "pyatnadcatj.wav";
+const char* V_SIXTEEN = "shestnadcatj.wav";
+const char* V_SEVENTEEN = "senmadcatj.wav";
+const char* V_EIGHTEEN = "vosemnadcatj.wav";
+const char* V_NINETEEN = "devyatnadcatj.wav";
 
-const char* V_TEN = "10.wav";
-const char* V_ELEVEN = "11.wav";
-const char* V_TWELVE = "12.wav";
-const char* V_THIRTEEN = "13.wav";
-const char* V_FOURTEEN = "14.wav";
-const char* V_FIFTEEN = "15.wav";
-const char* V_SIXTEEN = "16.wav";
-const char* V_SEVENTEEN = "17.wav";
-const char* V_EIGHTEEN = "18.wav";
-const char* V_NINETEEN = "19.wav";
-
-const char* V_TWENTY = "20.wav";
-const char* V_THIRTY = "30.wav";
-const char* V_FOURTY = "40.wav";
-const char* V_FIFTY = "50.wav";
+const char* V_TWENTY = "dvadcatj.wav";
+const char* V_THIRTY = "tridcatj.wav";
+const char* V_FOURTY = "sorok.wav";
+const char* V_FIFTY = "pyatdesyat.wav";
 
 
 voices voice={NULL, NULL};
@@ -382,4 +376,3 @@ while(tmp!=NULL)
 free_voices();
 return(0);
 }
-
