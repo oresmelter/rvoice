@@ -7,6 +7,7 @@
 #include <string.h>
 #include <errno.h>
 
+#include "test_hw.h"
 #include "opts.h"
 
 /**
@@ -21,7 +22,7 @@
  * b <разрядность> - разрядность в битах
  * h параметры вывода заголовка WAV
  */
-const char* format="dmtvp:s:f:b:h";
+const char* format="cdmtvp:s:f:b:h";
 char demon;
 spars current_params;
 
@@ -109,6 +110,9 @@ while(res!=-1)
      {
      switch(res)
            {
+           case 'c': test_hardware();
+                     exit(0);
+                     break;
            case 'd': demon=0x01;
                      break;
            case 'm': algo.params.mono=1;

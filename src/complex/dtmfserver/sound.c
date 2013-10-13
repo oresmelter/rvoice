@@ -7,10 +7,12 @@
 snd_pcm_t* playback_handle;
 snd_pcm_hw_params_t* hw_params;
 snd_pcm_stream_t stream = SND_PCM_STREAM_PLAYBACK;
+
+char* device_name="plughw:0,0";
 //char* device_name="dmix";
 //char* device_name="default";
 //char* device_name="tee:dmix,'/proc/self/fd/1',raw";
-char* device_name="tee:default,'/proc/self/fd/1',raw";
+//char* device_name="tee:default,'/proc/self/fd/1',raw";
 
 /**
  * map between bits and proper sound format to play
@@ -44,20 +46,18 @@ void open_device()
 {
 int err;
 
-// Allocate the snd_pcm_hw_params_t structure on the stack.
-
-if((err = snd_pcm_hw_params_malloc(&hw_params)) < 0)
-  {
-  syslog(LOG_ERR, "Audio device error: cannot allocate hardware parameter structure (%s)\n", snd_strerror(err));
-  go_out();
-  };
-
 if((err = snd_pcm_open(&playback_handle, device_name, stream, 0)) < 0) 
   {
   syslog(LOG_ERR, "Audio device error: cannot open %s (%s)\n", device_name, snd_strerror(err));
   go_out();
   };
 
+// Allocate the snd_pcm_hw_params_t structure on the stack.
+if((err = snd_pcm_hw_params_malloc(&hw_params)) < 0)
+  {
+  syslog(LOG_ERR, "Audio device error: cannot allocate hardware parameter structure (%s)\n", snd_strerror(err));
+  go_out();
+  };
 
 if(snd_pcm_hw_params_any(playback_handle, hw_params) < 0)
   {
@@ -66,7 +66,6 @@ if(snd_pcm_hw_params_any(playback_handle, hw_params) < 0)
   };
 
 syslog(LOG_WARNING, "Device successfully opened for playback\n");
-
 }
 
 
@@ -87,19 +86,12 @@ if(algo.params.mono==1)
   channels=1;
   };
 
-// frame size
-int frame=algo.params.bits*channels;
-// bytes per second
-int bps=frame*rate;
-
-syslog(LOG_INFO, "preparing to play:\n");
 // latency 1 sec
-if((err = snd_pcm_set_params(playback_handle, format, SND_PCM_ACCESS_RW_INTERLEAVED, 1, rate, 1, 1000000)) < 0)
+if((err = snd_pcm_set_params(playback_handle, format, SND_PCM_ACCESS_RW_INTERLEAVED, channels, rate, 0, 1000000)) < 0)
   {
   syslog(LOG_ERR, "Playback open error: %s\n", snd_strerror(err));
   go_out();
   };
-syslog(LOG_INFO, "done\n");
 
 syslog(LOG_INFO, "preparing to play:\n");
 if((err=snd_pcm_prepare(playback_handle)) < 0)
@@ -190,15 +182,16 @@ syslog(LOG_INFO, "done\n");
 
 // Set buffer size (in frames). The resulting latency is given by
 // latency = periodsize * periods / (rate * bytes_per_frame)
-if((err=snd_pcm_hw_params_set_buffer_size(playback_handle, hw_params, (period_size * periods)>>2)) < 0)
-  {
-  syslog(LOG_ERR, "Error setting buffersize.\n");
-  go_out();
-  };
+//syslog(LOG_INFO, "setting buffer size of %u:\n", (period_size * periods)>>2);
+//if((err=snd_pcm_hw_params_set_buffer_size(playback_handle, hw_params, (period_size * periods)>>2)) < 0)
+//  {
+//  syslog(LOG_ERR, "Error setting buffersize.\n");
+//  go_out();
+//  };
 
 // set hardware resampling
 syslog(LOG_INFO, "setting resample:\n");
-if((err = snd_pcm_hw_params_set_rate_resample(playback_handle, hw_params, 0)) < 0)
+if((err = snd_pcm_hw_params_set_rate_resample(playback_handle, hw_params, 1)) < 0)
   {
   syslog(LOG_ERR, "Resampling setup failed for playback: %s\n", snd_strerror(err));
   };
@@ -213,15 +206,30 @@ if((err=snd_pcm_hw_params(playback_handle, hw_params)) < 0)
 syslog(LOG_INFO, "done\n");
 
 snd_pcm_hw_params_free(hw_params);
-
-syslog(LOG_INFO, "preparing to play:\n");
-if((err=snd_pcm_prepare(playback_handle)) < 0)
-  {
-  syslog(LOG_ERR, "cannot prepare audio interface for use (%s)\n", snd_strerror(err));
-  go_out();
-  }
-syslog(LOG_INFO, "done\n");
 }
+
+/**
+ *
+ * playing sound from buffer
+ *
+ */
+void play_buffer(short* buf, unsigned long sz)
+{
+snd_pcm_sframes_t frames;
+
+//snd_pcm_drain(playback_handle);
+frames = snd_pcm_writei(playback_handle, buf, sz);
+if(frames < 0)
+  {
+  frames = snd_pcm_recover(playback_handle, frames, 0);
+  if(frames < 0)
+    {
+    syslog(LOG_ERR, "snd_pcm_writei failed: %s\n", snd_strerror(frames));
+    snd_pcm_drain(playback_handle);
+    };
+  };
+}
+
 
 /**
  *
@@ -232,4 +240,5 @@ void close_device()
 {
 snd_pcm_drop(playback_handle);
 snd_pcm_close(playback_handle);
+syslog(LOG_INFO, "Device closed\n");
 }

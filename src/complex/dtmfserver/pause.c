@@ -62,24 +62,13 @@ int play_pause(int* time)
 {
 int i;
 int res;
-snd_pcm_sframes_t frames;
-
 //syslog(LOG_INFO, "пауза %d\n", *time);
-res=calculate_bps()/2/8;
+res=calculate_bps()/8;
 syslog(LOG_INFO, "размер буфера %d\n", res);
 for(i=0; i<*time; i++)
    {
    syslog(LOG_INFO, "second #%d\n",i);
-   frames = snd_pcm_writei(playback_handle, ZEROES, res);
-   if(frames < 0)
-     {
-     frames = snd_pcm_recover(playback_handle, frames, 0);
-     if(frames < 0)
-       {
-       syslog(LOG_ERR, "snd_pcm_writei failed\n");
-       break;
-       };
-     };
+   play_buffer(ZEROES, res);
    };
 return(0);
 }
