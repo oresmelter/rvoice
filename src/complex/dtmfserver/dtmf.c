@@ -13,12 +13,13 @@ const int freq_high[4]={1209, 1336, 1477, 1633};
 /* 0 1 2 3 4 5 6 7 8 9 A B C D * # */
 const int freq_digit[16]={0x13, 0x00, 0x10, 0x20, 0x01, 0x11, 0x21, 0x02, 0x12, 0x22, 0x30, 0x31, 0x32, 0x33, 0x03, 0x23};
 
-const int digit_duration_ms=100;
-const int digit_pause_ms=100;
+const int digit_duration_ms=200;
+const int digit_pause_ms=200;
 
 char* digits_buffers[16]={NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 
 unsigned long digit_size=0;
+unsigned long digit_frames=0;
 
 /**
  * digit code
@@ -42,7 +43,7 @@ int dtmf_prepare()
 int i;
 int frame;
 int frames_digit_duration_count=algo.params.freq*digit_duration_ms/1000.0;
-int frames_per_full_digit_count=algo.params.freq*(digit_duration_ms+digit_pause_ms)/1000;
+int frames_per_full_digit_count=algo.params.freq*(digit_duration_ms+digit_pause_ms)/1000.0;
 
 int digit;
 double freq_1, freq_2;
@@ -52,12 +53,13 @@ int b;
 int res;
 
 // dtmf frequencies
-int f1;
-int f2;
+double f1;
+double f2;
 
 char* current_digit;
 
 char bytes=algo.params.bits/8;
+unsigned int offset;
 
 int channel;
 char channels=2;
@@ -66,29 +68,30 @@ if(algo.params.mono==1)
   channels=1;
   };
 
-int amplitude=(1<<(algo.params.bits/2));
+unsigned int amplitude=((unsigned int)1<<(algo.params.bits-1));
 
 digit_size=frames_per_full_digit_count*bytes*channels;
+digit_frames=frames_per_full_digit_count;
 syslog(LOG_INFO, "dtmf digit size: %d\n", digit_size);
 
 // digits
 for(i=0;i<16;i++)
    {
    current_digit=(char*)malloc(digit_size);
+   syslog(LOG_INFO, "current buffer %d: %x", i, current_digit);
    if(current_digit==NULL)
      {
      syslog(LOG_ERR, "not enough memory to prepare dtmf buffers\n");
      go_out();
      };
-
    digits_buffers[i]=current_digit;
-   digit=dtmf_get_digit_index(i);
+   digit=i;
    freq_1=freq_low[freq_digit[digit]&0x0F];
    freq_2=freq_high[freq_digit[digit]>>4];
-
    // frames
    for(frame=0; frame<frames_per_full_digit_count; frame++)
       {
+      offset=frame*channels*bytes;
       if(frame < frames_digit_duration_count)
         {
         // from -1 to 1
@@ -102,15 +105,15 @@ for(i=0;i<16;i++)
         };
 
       // interference
-      tmp=((double)(amplitude))*(f1+f2)/2;
-      res=tmp;
+      tmp=(f1+f2)/2;
+      res=tmp*amplitude;
       // channels
       for(channel=0; channel<channels; channel++)
          {
          // filling
          for(b=0; b<bytes; b++)
             {
-            current_digit[frame*channel*bytes+b]=(res>>(b*8))%0xff;
+            current_digit[offset+channel*bytes+b]=(res>>(b*8))%0xff;
             };
          };
       };
@@ -139,12 +142,37 @@ for(i=0; i<digits_count; i++)
    digit=dtmf_get_digit_index(text[i]);
    if(digit!=-1)
      {
-     play_buffer(digits_buffers[digit], digit_size);
+     syslog(LOG_INFO, "playing digit %d (%x)", digit, digits_buffers[digit]);
+     play_buffer(digits_buffers[digit], digit_frames);
+     //exit(0);
      };
    };
-play_buffer(digits_buffers[15], digit_size);
+syslog(LOG_INFO, "playing digit #");
+play_buffer(digits_buffers[15], digit_frames);
 
 syslog(LOG_INFO, "DTMF done\n");
 return(0);
 }
 
+/**
+ * debug write to file
+ */
+int append_buffer(char* buf, int sz)
+{
+int fd;
+int res;
+fd=open("/tmp/debugdtmf.dat", O_WRONLY | O_CREAT | O_TRUNC, 0600);
+if(fd==-1)
+  {
+  syslog(LOG_INFO, "cannot open file for debug write");
+  return(-1);
+  };
+
+res=write(fd, buf, sz);
+if(res!=sz)
+  {
+  syslog(LOG_INFO, "written not all buffer");
+  };
+close(fd);
+return(0);
+}

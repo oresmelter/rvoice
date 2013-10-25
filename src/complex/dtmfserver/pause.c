@@ -63,8 +63,8 @@ int play_pause(int* time)
 int i;
 int res;
 //syslog(LOG_INFO, "пауза %d\n", *time);
-res=calculate_bps()/8;
-syslog(LOG_INFO, "размер буфера %d\n", res);
+res=algo.params.freq;
+//syslog(LOG_INFO, "размер буфера %d\n", res);
 for(i=0; i<*time; i++)
    {
    syslog(LOG_INFO, "second #%d\n",i);
