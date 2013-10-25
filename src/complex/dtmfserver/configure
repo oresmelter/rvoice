@@ -5,11 +5,11 @@ TARGET=dtmfserver
 SRC_DIR=.
 SUBDIRS="../../libs/utils"
 
-CFLAGS=
+CFLAGS=-g
 LDFLAGS=
 
 INCLUDES="../../libs/utils"
 LIBPATHS="../../libs/utils"
-LIBRARIES="utils asound"
+LIBRARIES="utils asound m"
 
 . /tmp/do_makes.sh
