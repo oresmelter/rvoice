@@ -8,6 +8,7 @@
 #include <syslog.h>
 #include <alsa/asoundlib.h>
 
+#include "opts.h"
 #include "sound.h"
 #include "test_hw.h"
 

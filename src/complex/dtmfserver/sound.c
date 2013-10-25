@@ -7,12 +7,7 @@
 snd_pcm_t* playback_handle;
 snd_pcm_hw_params_t* hw_params;
 snd_pcm_stream_t stream = SND_PCM_STREAM_PLAYBACK;
-
-char* device_name="plughw:0,0";
-//char* device_name="dmix";
-//char* device_name="default";
-//char* device_name="tee:dmix,'/proc/self/fd/1',raw";
-//char* device_name="tee:default,'/proc/self/fd/1',raw";
+int rec_count=0;
 
 /**
  * map between bits and proper sound format to play
@@ -228,6 +223,8 @@ if(frames < 0)
     snd_pcm_drain(playback_handle);
     };
   };
+//snd_pcm_drain(playback_handle);
+syslog(LOG_INFO, "buffer: %x size: %u", buf, sz);
 }
 
 

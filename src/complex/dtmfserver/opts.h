@@ -1,6 +1,16 @@
 #ifndef OPTS_H
 #define OPTS_H
 
+/**
+ * "plughw:0,0";
+ * "dmix";
+ * "default";
+ * "tee:dmix,'/proc/self/fd/1',raw";
+ * "tee:default,'/proc/self/fd/1',raw";
+ */
+
+extern char* device_name;
+
 struct sound_params
        {
        unsigned int freq;

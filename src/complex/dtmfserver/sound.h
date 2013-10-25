@@ -6,7 +6,6 @@
 extern snd_pcm_t* playback_handle;
 extern snd_pcm_hw_params_t* hw_params;
 extern snd_pcm_stream_t stream;
-extern char* device_name;
 
 
 void open_device();

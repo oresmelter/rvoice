@@ -10,8 +10,16 @@
 #include "test_hw.h"
 #include "opts.h"
 
+char* device_name="default";
+//char* device_name="plughw:0,0";
+//char* device_name="dmix";
+//char* device_name="tee:dmix,'/proc/self/fd/1',raw";
+//char* device_name="tee:default,'/proc/self/fd/1',raw";
+
 /**
  * Формат:
+ * D - имя устройства ALSA
+ * c - проверка устройств ALSA
  * d - запуск в режиме демона
  * m - режим моно
  * t - выводить DTMF
@@ -22,7 +30,7 @@
  * b <разрядность> - разрядность в битах
  * h параметры вывода заголовка WAV
  */
-const char* format="cdmtvp:s:f:b:h";
+const char* format="cdmtvp:s:f:b:D:h";
 char demon;
 spars current_params;
 
@@ -53,7 +61,7 @@ int n;
 struct work_unit* w;
 int* pn;
 
-syslog(LOG_INFO, "Создаем запись с параметрами %c, %p\n", p, v);
+//syslog(LOG_INFO, "Создаем запись с параметрами %c, %p\n", p, v);
 
 pn=(int*)malloc(sizeof(int));
 if(pn==NULL)
@@ -74,7 +82,7 @@ n=try_parse(p, v);
 w->type=p;
 w->param=(void*)pn;
 w->next_unit=NULL;
-syslog(LOG_INFO, "Создана запись с параметрами %c, %p\n", p, pn);
+//syslog(LOG_INFO, "Создана запись с параметрами %c, %p\n", p, pn);
 add_to_algo(w);
 }
 
@@ -105,11 +113,13 @@ demon=0;
 
 init_algo();
 res=getopt(argc, argv, format);
-syslog(LOG_INFO, "анализируем %d\n", res);
+//syslog(LOG_INFO, "анализируем '%c'\n", res);
 while(res!=-1)
      {
      switch(res)
            {
+           case 'D': device_name=optarg;
+                     break;
            case 'c': test_hardware();
                      exit(0);
                      break;
@@ -138,6 +148,6 @@ while(res!=-1)
                      break;
            };
      res=getopt(argc, argv, format);
-     syslog(LOG_INFO, "анализируем %d\n", res);
+//     syslog(LOG_INFO, "анализируем '%c'\n", res);
      };
 }
