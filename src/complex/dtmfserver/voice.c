@@ -319,7 +319,7 @@ void parse_time(char* time)
 {
 char unit[2];
 
-char* pnt=time;;
+char* pnt=time;
 
 pnt=fill_unit(pnt, unit);
 add_time_part(unit, 1, (char*)V_CHASOV, (char*)V_CHAS, (char*)V_CHASA);
@@ -365,12 +365,17 @@ voice.next=NULL;
  */
 int play_voice(char* text)
 {
+char tmpbuf[256];
 voices* tmp=&voice;
 syslog(LOG_INFO, "Время %s\n", text);
 parse_time(text);
+tmp=tmp->next;
 while(tmp!=NULL)
      {
-     play_sound((char*)tmp->file);
+     tmpbuf[0]=0x00;
+     strncat(tmpbuf, V_PATH, 40);
+     strncat(tmpbuf, tmp->file, 215);
+     play_wav(tmpbuf);
      tmp=tmp->next;
      };
 free_voices();
