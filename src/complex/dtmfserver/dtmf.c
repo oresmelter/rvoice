@@ -78,7 +78,7 @@ syslog(LOG_INFO, "dtmf digit size: %d\n", digit_size);
 for(i=0;i<16;i++)
    {
    current_digit=(char*)malloc(digit_size);
-   syslog(LOG_INFO, "current buffer %d: %x", i, current_digit);
+   //syslog(LOG_INFO, "current buffer %d: %x", i, current_digit);
    if(current_digit==NULL)
      {
      syslog(LOG_ERR, "not enough memory to prepare dtmf buffers\n");
