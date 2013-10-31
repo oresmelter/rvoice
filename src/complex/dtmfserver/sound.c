@@ -239,3 +239,15 @@ snd_pcm_drop(playback_handle);
 snd_pcm_close(playback_handle);
 syslog(LOG_INFO, "Device closed\n");
 }
+
+
+void drain_sound()
+{
+int err;
+snd_pcm_drain(playback_handle);
+if((err=snd_pcm_prepare(playback_handle)) < 0)
+  {
+  syslog(LOG_ERR, "cannot prepare audio interface for use (%s)\n", snd_strerror(err));
+  go_out();
+  };
+}

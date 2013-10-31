@@ -12,5 +12,6 @@ void open_device();
 void setup_device();
 void simple_setup();
 void play_buffer(char*, unsigned long);
+void drain_sound();
 
 #endif
