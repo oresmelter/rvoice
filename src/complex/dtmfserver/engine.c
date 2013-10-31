@@ -80,7 +80,7 @@ do
                   break;
         case 'v': play_voice(time_buffer);
                   break;
-        case 's': play_sound(w->param);
+        case 's': play_wav(w->param);
                   break;
         case 'p': play_pause(w->param);
                   break;

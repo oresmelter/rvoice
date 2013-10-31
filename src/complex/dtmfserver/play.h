@@ -1,7 +1,7 @@
 #ifndef PLAY_H
 #define PLAY_H
 
-int play_sound(char*);
+int play_wav(char*);
 
 
 #endif
