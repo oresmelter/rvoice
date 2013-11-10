@@ -13,8 +13,8 @@
 #include "misc.h"
 #include "opts.h"
 
-// 1024 * 1024 * 1024
-#define MAX_SIZE 1073741824
+// 8 * 1024 * 1024
+#define MAX_SIZE 8388608
 
 unsigned char* ZEROES;
 int zeroes_fd=-1;
