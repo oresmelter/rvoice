@@ -39,7 +39,7 @@ const char* V_THIRTEEN = "trinadcatj.wav";
 const char* V_FOURTEEN = "chetyrnadcatj.wav";
 const char* V_FIFTEEN = "pyatnadcatj.wav";
 const char* V_SIXTEEN = "shestnadcatj.wav";
-const char* V_SEVENTEEN = "senmadcatj.wav";
+const char* V_SEVENTEEN = "semnadcatj.wav";
 const char* V_EIGHTEEN = "vosemnadcatj.wav";
 const char* V_NINETEEN = "devyatnadcatj.wav";
 
